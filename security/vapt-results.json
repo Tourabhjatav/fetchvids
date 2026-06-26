@@ -1,0 +1,77 @@
+﻿{
+    "target":  "http://localhost:8787",
+    "generatedAt":  "2026-06-25T22:56:45.5755565+05:30",
+    "passed":  true,
+    "results":  [
+                    {
+                        "test":  "Health endpoint",
+                        "passed":  true,
+                        "evidence":  "HTTP 200"
+                    },
+                    {
+                        "test":  "Security header: Content-Security-Policy",
+                        "passed":  true,
+                        "evidence":  "default-src \u0027self\u0027;base-uri \u0027none\u0027;connect-src \u0027self\u0027;font-src \u0027self\u0027 https://fonts.gstatic.com;form-action \u0027self\u0027;frame-ancestors \u0027none\u0027;img-src \u0027self\u0027 data: https:;object-src \u0027none\u0027;script-src \u0027self\u0027;style-src \u0027self\u0027 https://fonts.googleapis.com;upgrade-insecure-requests;script-src-attr \u0027none\u0027"
+                    },
+                    {
+                        "test":  "Security header: X-Content-Type-Options",
+                        "passed":  true,
+                        "evidence":  "nosniff"
+                    },
+                    {
+                        "test":  "Security header: X-Frame-Options",
+                        "passed":  true,
+                        "evidence":  "DENY"
+                    },
+                    {
+                        "test":  "Security header: Referrer-Policy",
+                        "passed":  true,
+                        "evidence":  "no-referrer"
+                    },
+                    {
+                        "test":  "Security header: Permissions-Policy",
+                        "passed":  true,
+                        "evidence":  "camera=(), microphone=(), geolocation=(), payment=()"
+                    },
+                    {
+                        "test":  "Reject untrusted domain",
+                        "passed":  true,
+                        "evidence":  "HTTP 400"
+                    },
+                    {
+                        "test":  "Reject URL userinfo/SSRF form",
+                        "passed":  true,
+                        "evidence":  "HTTP 400"
+                    },
+                    {
+                        "test":  "Command-injection-shaped input is not executed",
+                        "passed":  true,
+                        "evidence":  "HTTP 502"
+                    },
+                    {
+                        "test":  "Reject non-JSON content type",
+                        "passed":  true,
+                        "evidence":  "HTTP 415"
+                    },
+                    {
+                        "test":  "Reject malformed JSON safely",
+                        "passed":  true,
+                        "evidence":  "HTTP 400"
+                    },
+                    {
+                        "test":  "Reject oversized request body",
+                        "passed":  true,
+                        "evidence":  "HTTP 413"
+                    },
+                    {
+                        "test":  "Unknown API returns 404",
+                        "passed":  true,
+                        "evidence":  "HTTP 404"
+                    },
+                    {
+                        "test":  "Resolver rate limiting",
+                        "passed":  true,
+                        "evidence":  "429 observed: True"
+                    }
+                ]
+}

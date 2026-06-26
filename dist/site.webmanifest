@@ -1,0 +1,17 @@
+{
+  "name": "FetchVids",
+  "short_name": "FetchVids",
+  "description": "Free social video downloader for public links.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#075bea",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "48x48 96x96 144x144 192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

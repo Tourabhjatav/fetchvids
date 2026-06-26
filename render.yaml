@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: fetchvids
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MAX_CONCURRENT_RESOLVERS
+        value: "2"
