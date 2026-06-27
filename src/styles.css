@@ -125,7 +125,7 @@ h1 span, h1 em { display: block; }
 }
 .download-form input::placeholder { color: #b9bdc6; }
 .download-form input:focus { border-color: var(--blue); box-shadow: inset 0 0 0 1px var(--blue); }
-.download-form button, .download-button {
+.download-form button, .download-button, .copy-button {
   border: 0;
   border-radius: 0 var(--radius) var(--radius) 0;
   background: var(--red);
@@ -139,7 +139,7 @@ h1 span, h1 em { display: block; }
   gap: 10px;
   transition: transform .2s, background .2s;
 }
-.download-form button:hover, .download-button:hover { background: var(--red-dark); transform: translateY(-1px); }
+.download-form button:hover, .download-button:hover, .copy-button:hover { background: var(--red-dark); transform: translateY(-1px); }
 .download-form button:disabled { cursor: wait; opacity: .8; }
 .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,.45); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -169,6 +169,50 @@ h1 span, h1 em { display: block; }
   border-radius: 6px;
 }
 .ad-slot--wide { max-width: 1184px; height: 82px; }
+.ad-slot--live {
+  overflow: hidden;
+  border-style: solid;
+  background: #fff;
+}
+.adsbygoogle {
+  display: block;
+  width: 100%;
+  min-height: 90px;
+}
+.ad-slot--result {
+  width: 100%;
+  min-height: 96px;
+  margin-top: 18px;
+}
+.sticky-ad {
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  z-index: 50;
+  width: min(760px, calc(100vw - 28px));
+  transform: translateX(-50%);
+  filter: drop-shadow(0 10px 24px rgba(18, 22, 31, .22));
+}
+.sticky-ad__close {
+  position: absolute;
+  top: -14px;
+  right: -10px;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--blue);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+.ad-slot--sticky {
+  min-height: 94px;
+  border-style: solid;
+  background: #fff;
+}
 
 .page-main { min-height: 62vh; }
 .page-hero {
@@ -329,9 +373,60 @@ h2 { font-size: clamp(40px, 4.5vw, 64px); line-height: 1.05; letter-spacing: 0; 
 .result-info h3 { font-size: clamp(25px, 2.5vw, 34px); line-height: 1.2; letter-spacing: 0; margin-bottom: 12px; }
 .result-info p { color: var(--muted); font-weight: 600; }
 .download-button { min-height: 64px; border-radius: 7px; padding: 0 28px; width: max-content; margin-top: 8px; }
-.download-button svg { width: 26px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.download-button svg, .copy-button svg { width: 26px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .download-button--disabled { background: #b8bdc6; pointer-events: none; }
 .text-button { border: 0; background: transparent; color: var(--blue); font-weight: 800; cursor: pointer; display: block; padding: 12px 0; }
+.caption-box {
+  width: 100%;
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcfe;
+  padding: 16px;
+}
+.caption-box__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.caption-box h4 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 800;
+}
+.caption-box p {
+  max-height: 160px;
+  overflow: auto;
+  margin: 0;
+  color: #3e4551;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.copy-button {
+  min-height: 42px;
+  border-radius: 7px;
+  padding: 0 14px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.copy-button:disabled {
+  background: #b8bdc6;
+  cursor: not-allowed;
+  transform: none;
+}
+.copy-button svg { width: 18px; }
+.copy-message {
+  display: block;
+  margin-top: 10px;
+  color: #c52026;
+  font-size: 13px;
+  font-weight: 700;
+}
 .ad-slot--side { min-height: 350px; }
 
 .faq-section { padding-top: 30px; }
@@ -422,6 +517,8 @@ footer > p { text-align: center; color: #343a45; font-size: 13px; margin: 24px 0
   .form-meta { display: block; min-height: 86px; line-height: 1.5; }
   .form-message { text-align: left; margin-top: 10px !important; }
   .ad-slot--wide { height: 92px; }
+  .sticky-ad { bottom: 10px; width: calc(100vw - 20px); }
+  .ad-slot--sticky { min-height: 86px; }
   .section-shell { padding: 54px 20px; }
   h2 { margin-bottom: 32px; }
   .detail-card { min-height: auto; padding: 22px; }
@@ -433,6 +530,8 @@ footer > p { text-align: center; color: #343a45; font-size: 13px; margin: 24px 0
   .video-preview { height: 220px; }
   .result-info { padding: 0 8px 14px; }
   .download-button { width: 100%; }
+  .caption-box__header { align-items: flex-start; flex-direction: column; }
+  .copy-button { width: 100%; }
   .faq-item button { padding: 20px 18px; font-size: 16px; }
   .faq-answer { padding: 0 18px 20px; font-size: 14px; }
   footer { padding: 32px 20px 48px; }

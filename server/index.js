@@ -108,14 +108,28 @@ app.use(helmet({
     directives: {
       defaultSrc: ["'self'"],
       baseUri: ["'none'"],
-      connectSrc: ["'self'"],
+      connectSrc: [
+        "'self'",
+        "https://pagead2.googlesyndication.com",
+        "https://googleads.g.doubleclick.net",
+        "https://tpc.googlesyndication.com"
+      ],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       formAction: ["'self'"],
       frameAncestors: ["'none'"],
+      frameSrc: [
+        "https://googleads.g.doubleclick.net",
+        "https://tpc.googlesyndication.com"
+      ],
       imgSrc: ["'self'", "data:", "https:"],
       objectSrc: ["'none'"],
-      scriptSrc: ["'self'", (_req, res) => `'nonce-${res.locals.cspNonce}'`],
-      styleSrc: ["'self'", "https://fonts.googleapis.com"],
+      scriptSrc: [
+        "'self'",
+        "https://pagead2.googlesyndication.com",
+        "https://googleads.g.doubleclick.net",
+        (_req, res) => `'nonce-${res.locals.cspNonce}'`
+      ],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       upgradeInsecureRequests: isProduction ? [] : null
     }
   },
@@ -207,6 +221,26 @@ function safeHttpsUrl(value) {
   } catch {
     return null;
   }
+}
+
+function cleanText(value, maxLength = 5000) {
+  if (!value) return null;
+  const text = String(value)
+    .replace(/\r\n?/g, "\n")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+  return text ? text.slice(0, maxLength) : null;
+}
+
+function getMediaCaption(media) {
+  return cleanText(
+    media.description ||
+    media.caption ||
+    media.fulltitle ||
+    media.title ||
+    media.alt_title
+  );
 }
 
 function getPublicBaseUrl(req) {
@@ -374,6 +408,30 @@ function getStructuredData(req, pageUrl, meta) {
   return JSON.stringify({ "@context": "https://schema.org", "@graph": graph }).replaceAll("<", "\\u003c");
 }
 
+function getAdConfig() {
+  const adsEnabled = process.env.ADS_ENABLED === "true" || process.env.VITE_ADS_ENABLED === "true";
+  const autoAdsEnabled = process.env.ADSENSE_AUTO_ADS === "true" || process.env.VITE_ADSENSE_AUTO_ADS === "true";
+  return JSON.stringify({
+    enabled: adsEnabled,
+    autoAds: autoAdsEnabled,
+    client: process.env.ADSENSE_CLIENT || process.env.VITE_ADSENSE_CLIENT || "",
+    slots: {
+      wide: process.env.ADSENSE_WIDE_SLOT || process.env.VITE_ADSENSE_WIDE_SLOT || "",
+      side: process.env.ADSENSE_SIDE_SLOT || process.env.VITE_ADSENSE_SIDE_SLOT || "",
+      result: process.env.ADSENSE_RESULT_SLOT || process.env.VITE_ADSENSE_RESULT_SLOT || "",
+      sticky: process.env.ADSENSE_STICKY_SLOT || process.env.VITE_ADSENSE_STICKY_SLOT || ""
+    }
+  }).replaceAll("<", "\\u003c");
+}
+
+function getAutoAdScript() {
+  const adsEnabled = process.env.ADS_ENABLED === "true" || process.env.VITE_ADS_ENABLED === "true";
+  const autoAdsEnabled = process.env.ADSENSE_AUTO_ADS === "true" || process.env.VITE_ADSENSE_AUTO_ADS === "true";
+  const client = process.env.ADSENSE_CLIENT || process.env.VITE_ADSENSE_CLIENT || "";
+  if (!adsEnabled || !autoAdsEnabled || !client) return "";
+  return `<script async data-fetchvids-adsense src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(client)}" crossorigin="anonymous"></script>`;
+}
+
 function sendAppShell(req, res) {
   const pageUrl = getPageUrl(req);
   const meta = getPageMeta(req.path);
@@ -383,6 +441,8 @@ function sendAppShell(req, res) {
     .replaceAll("%FETCHVIDS_PAGE_DESCRIPTION%", escapeHtml(meta.description))
     .replaceAll("%FETCHVIDS_FALLBACK_H1%", escapeHtml(meta.h1))
     .replaceAll("%FETCHVIDS_SCHEMA%", getStructuredData(req, pageUrl, meta))
+    .replaceAll("%FETCHVIDS_AUTO_AD_SCRIPT%", getAutoAdScript())
+    .replaceAll("%FETCHVIDS_AD_CONFIG%", getAdConfig())
     .replaceAll("%CSP_NONCE%", res.locals.cspNonce);
   res.type("html");
   res.setHeader("Cache-Control", "no-cache");
@@ -433,6 +493,7 @@ app.post("/api/resolve", resolveLimiter, async (req, res) => {
     const media = JSON.parse(stdout);
     const downloadUrl = safeHttpsUrl(media.url);
     if (!downloadUrl) throw new Error("No safe downloadable media URL returned.");
+    const caption = getMediaCaption(media);
 
     res.json({
       title: String(media.title || media.description || "Your video is ready").slice(0, 160),
@@ -440,6 +501,7 @@ app.post("/api/resolve", resolveLimiter, async (req, res) => {
       thumbnail: safeHttpsUrl(media.thumbnail),
       duration: media.duration_string ? String(media.duration_string).slice(0, 24) : null,
       quality: media.height ? `${media.height}p` : "Best available",
+      caption,
       downloadUrl
     });
   } catch (error) {

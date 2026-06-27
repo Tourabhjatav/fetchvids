@@ -1,6 +1,15 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-const ADS_ENABLED = import.meta.env.VITE_ADS_ENABLED === "true";
+const RUNTIME_ADS = typeof window !== "undefined" ? window.FETCHVIDS_ADS || {} : {};
+const ADS_ENABLED = import.meta.env.VITE_ADS_ENABLED === "true" || RUNTIME_ADS.enabled === true;
+const ADSENSE_AUTO_ADS = import.meta.env.VITE_ADSENSE_AUTO_ADS === "true" || RUNTIME_ADS.autoAds === true;
+const ADSENSE_CLIENT = import.meta.env.VITE_ADSENSE_CLIENT || RUNTIME_ADS.client || "";
+const ADSENSE_SLOTS = {
+  wide: import.meta.env.VITE_ADSENSE_WIDE_SLOT || RUNTIME_ADS.slots?.wide || "",
+  side: import.meta.env.VITE_ADSENSE_SIDE_SLOT || RUNTIME_ADS.slots?.side || "",
+  result: import.meta.env.VITE_ADSENSE_RESULT_SLOT || RUNTIME_ADS.slots?.result || "",
+  sticky: import.meta.env.VITE_ADSENSE_STICKY_SLOT || RUNTIME_ADS.slots?.sticky || ""
+};
 const BRAND = {
   name: "FetchVids",
   first: "Fetch",
@@ -256,6 +265,25 @@ const COPYRIGHT_SECTIONS = [
   }
 ];
 
+function loadAdsenseScript() {
+  if (!ADSENSE_CLIENT || typeof document === "undefined") return;
+  if (document.querySelector("script[data-fetchvids-adsense]")) return;
+
+  const script = document.createElement("script");
+  script.async = true;
+  script.crossOrigin = "anonymous";
+  script.dataset.fetchvidsAdsense = "true";
+  script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(ADSENSE_CLIENT)}`;
+  document.head.appendChild(script);
+}
+
+function getAdSlotType(className) {
+  if (className.includes("ad-slot--sticky")) return "sticky";
+  if (className.includes("ad-slot--result")) return "result";
+  if (className.includes("ad-slot--side")) return "side";
+  return "wide";
+}
+
 function getPlatform(value) {
   try {
     const parsed = new URL(value.trim());
@@ -311,11 +339,59 @@ function DownloadIcon() {
   );
 }
 
+function CopyIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="9" y="9" width="11" height="11" rx="2" />
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+    </svg>
+  );
+}
+
 function AdSlot({ className = "" }) {
+  const adRef = useRef(null);
+  const slotType = getAdSlotType(className);
+  const slotId = ADSENSE_SLOTS[slotType];
+
+  useEffect(() => {
+    if (!ADS_ENABLED || !ADSENSE_CLIENT || !slotId || !adRef.current || adRef.current.dataset.adLoaded === "true") return;
+    if (!ADSENSE_AUTO_ADS) loadAdsenseScript();
+    adRef.current.dataset.adLoaded = "true";
+    window.adsbygoogle = window.adsbygoogle || [];
+    window.adsbygoogle.push({});
+  }, [slotId]);
+
   if (!ADS_ENABLED) return null;
+
+  if (ADSENSE_CLIENT && slotId) {
+    return (
+      <aside className={`ad-slot ad-slot--live ${className}`} aria-label="Advertisement">
+        <span>Advertisement</span>
+        <ins
+          ref={adRef}
+          className="adsbygoogle"
+          data-ad-client={ADSENSE_CLIENT}
+          data-ad-slot={slotId}
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        />
+      </aside>
+    );
+  }
+
   return (
     <aside className={`ad-slot ${className}`} aria-label="Advertisement">
       <span>Advertisement</span>
+    </aside>
+  );
+}
+
+function StickyAd({ onClose }) {
+  if (!ADS_ENABLED) return null;
+  return (
+    <aside className="sticky-ad" aria-label="Advertisement">
+      <button className="sticky-ad__close" type="button" onClick={onClose} aria-label="Close advertisement">x</button>
+      <AdSlot className="ad-slot--sticky" />
     </aside>
   );
 }
@@ -435,6 +511,34 @@ function PlatformLinks({ current }) {
 }
 
 function Result({ result, onReset }) {
+  const [copyStatus, setCopyStatus] = useState("idle");
+  const caption = result?.caption?.trim();
+
+  async function copyCaption() {
+    if (!caption) return;
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(caption);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = caption;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
+      setCopyStatus("copied");
+      window.setTimeout(() => setCopyStatus("idle"), 1800);
+    } catch {
+      setCopyStatus("error");
+      window.setTimeout(() => setCopyStatus("idle"), 2400);
+    }
+  }
+
   return (
     <section className="result-section" id="result">
       <div className="section-shell">
@@ -456,6 +560,17 @@ function Result({ result, onReset }) {
                   <a className="download-button" href={result.downloadUrl} download rel="nofollow">
                     <DownloadIcon /> Download MP4
                   </a>
+                  <AdSlot className="ad-slot--result" />
+                  <div className="caption-box">
+                    <div className="caption-box__header">
+                      <h4>Caption</h4>
+                      <button className="copy-button" type="button" onClick={copyCaption} disabled={!caption}>
+                        <CopyIcon /> {copyStatus === "copied" ? "Copied" : "Copy caption"}
+                      </button>
+                    </div>
+                    <p>{caption || "No caption was found for this link."}</p>
+                    {copyStatus === "error" ? <span className="copy-message">Copy failed. Select the caption text and copy it manually.</span> : null}
+                  </div>
                   <button className="text-button" type="button" onClick={onReset}>Try another link</button>
                 </>
               ) : (
@@ -472,7 +587,15 @@ function Result({ result, onReset }) {
 
 function PlatformDownloaderPage({ page }) {
   const [result, setResult] = useState(null);
-  const reset = () => setResult(null);
+  const [showStickyAd, setShowStickyAd] = useState(false);
+  function handleResult(data) {
+    setResult(data);
+    setShowStickyAd(true);
+  }
+  function reset() {
+    setResult(null);
+    setShowStickyAd(false);
+  }
 
   return (
     <>
@@ -489,7 +612,7 @@ function PlatformDownloaderPage({ page }) {
             <span className="ribbon ribbon--back" />
             <span className="ribbon ribbon--front" />
           </div>
-          <Downloader focusPage={page} onResult={setResult} result={result} onReset={reset} />
+          <Downloader focusPage={page} onResult={handleResult} result={result} onReset={reset} />
           <AdSlot className="ad-slot--wide" />
         </section>
       </main>
@@ -514,6 +637,7 @@ function PlatformDownloaderPage({ page }) {
         </div>
       </section>
       <Result result={result} onReset={reset} />
+      {showStickyAd ? <StickyAd onClose={() => setShowStickyAd(false)} /> : null}
     </>
   );
 }

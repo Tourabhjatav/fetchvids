@@ -42,7 +42,21 @@ Open `http://localhost:8787`. The image runs as a non-root user and includes Nod
 
 Push this folder to a Git repository, then create a Render Blueprint from `render.yaml`. Alternatively, create a Docker Web Service from the included `Dockerfile`. Render supplies HTTPS and an `onrender.com` address.
 
-Ad placeholders are disabled by default. Do not enable Google AdSense on the downloader surface; review the launch checklist for the policy-safe monetization path.
+Ad placeholders are disabled by default. The app supports a policy-safer result-page ad and a closeable sticky bottom ad after a successful resolve. Do not make ads look like download buttons or force users to click ads.
+
+To enable AdSense after your site is approved, add these environment variables in Render:
+
+```powershell
+ADS_ENABLED=true
+ADSENSE_AUTO_ADS=true
+ADSENSE_CLIENT=ca-pub-your-publisher-id
+ADSENSE_WIDE_SLOT=your-wide-slot
+ADSENSE_SIDE_SLOT=your-side-slot
+ADSENSE_RESULT_SLOT=your-result-slot
+ADSENSE_STICKY_SLOT=your-sticky-slot
+```
+
+`ADSENSE_AUTO_ADS=true` loads the AdSense Auto Ads script in the page head. To get full-screen ads like `#google_vignette`, enable Auto Ads and the Vignette format inside your Google AdSense account. Google decides when to show those overlays.
 
 See [docs/LAUNCH-CHECKLIST.md](docs/LAUNCH-CHECKLIST.md) for the verified cost breakdown, free-host choices, ad-approval limitations, and remaining launch requirements.
 
