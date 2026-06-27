@@ -146,6 +146,10 @@ const resolveLimiter = rateLimit({
   message: { error: "Too many download requests. Please wait a few minutes and try again." }
 });
 
+app.get("/api/health", (_req, res) => {
+  res.setHeader("Cache-Control", "no-store");
+  res.json({ ok: true });
+});
 app.use("/api", apiLimiter, express.json({ limit: "2kb", strict: true, type: "application/json" }));
 
 const PLATFORM_RULES = [
@@ -450,10 +454,6 @@ app.post("/api/resolve", resolveLimiter, async (req, res) => {
   }
 });
 
-app.get("/api/health", (_req, res) => {
-  res.setHeader("Cache-Control", "no-store");
-  res.json({ ok: true });
-});
 app.use("/api", (_req, res) => res.status(404).json({ error: "API endpoint not found." }));
 
 app.get("/robots.txt", (req, res) => {
