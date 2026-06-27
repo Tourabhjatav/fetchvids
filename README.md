@@ -48,7 +48,9 @@ See [docs/LAUNCH-CHECKLIST.md](docs/LAUNCH-CHECKLIST.md) for the verified cost b
 
 ## SEO setup
 
-The primary landing page is `/instagram-video-downloader/` and is optimized around the search intent "download Instagram video." It includes an Instagram-focused title, meta description, Open Graph/Twitter preview tags, a favicon, a web manifest, WebSite/WebApplication/HowTo/FAQ structured data, dynamic canonical URL injection, `/robots.txt`, and `/sitemap.xml`.
+The primary landing page is `/instagram-video-downloader/` and is optimized around the search intent "download Instagram video." The site also has separate crawlable platform pages for `/facebook-video-downloader/`, `/youtube-video-downloader/`, and `/x-twitter-video-downloader/`, plus `/how-it-works/`, `/faq/`, `/privacy/`, `/terms/`, and `/copyright/`.
+
+Each page gets a route-specific title, meta description, canonical URL, Open Graph/Twitter preview tags, structured data where relevant, and inclusion in `/sitemap.xml`. These values are injected by the Express server at request time, so deploy the Node server rather than serving `dist/index.html` as a static-only file.
 
 For best SEO after deployment, connect a real domain and set `PUBLIC_SITE_URL=https://your-domain.com` in the hosting environment. If `PUBLIC_SITE_URL` is not set, FetchVids uses the current request host for canonical, robots, and sitemap URLs.
 

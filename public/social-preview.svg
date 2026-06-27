@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="FetchVids Instagram video downloader">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="FetchVids social video downloader">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
       <stop stop-color="#f6f8fc"/>
@@ -16,7 +16,7 @@
   <path d="M182 180v-40l36 20-36 20Z" fill="#fff"/>
   <text x="286" y="158" fill="#12161f" font-family="Arial, sans-serif" font-size="76" font-weight="800">Fetch</text>
   <text x="506" y="158" fill="#ff3538" font-family="Arial, sans-serif" font-size="76" font-weight="800">Vids</text>
-  <text x="88" y="350" fill="#12161f" font-family="Arial, sans-serif" font-size="72" font-weight="800">Instagram Video Downloader</text>
-  <text x="92" y="430" fill="#555d6a" font-family="Arial, sans-serif" font-size="34">Download public Reels, posts, and Stories from a shared link.</text>
-  <text x="92" y="495" fill="#075bea" font-family="Arial, sans-serif" font-size="28" font-weight="700">Save only content you own or have permission to use.</text>
+  <text x="88" y="340" fill="#12161f" font-family="Arial, sans-serif" font-size="68" font-weight="800">Social Video Downloader</text>
+  <text x="92" y="420" fill="#555d6a" font-family="Arial, sans-serif" font-size="33">Instagram, Facebook, YouTube, and X public video links.</text>
+  <text x="92" y="490" fill="#075bea" font-family="Arial, sans-serif" font-size="28" font-weight="700">Save only content you own or have permission to use.</text>
 </svg>
