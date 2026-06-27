@@ -385,6 +385,8 @@ footer::after { content: ""; position: absolute; left: max(48px, calc((100% - 11
 .footer-main { display: flex; align-items: center; justify-content: space-between; gap: 30px; }
 .footer-links { display: flex; gap: clamp(24px, 4vw, 62px); color: var(--blue); font-weight: 600; }
 footer > p { text-align: center; color: #343a45; font-size: 13px; margin: 24px 0 0; }
+.owner-link { color: var(--blue); font-weight: 800; }
+.owner-link:hover { color: var(--red); }
 
 @media (max-width: 900px) {
   .site-header { grid-template-columns: 1fr auto; }

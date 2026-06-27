@@ -20,6 +20,8 @@ const indexHtmlPath = path.join(distPath, "index.html");
 const bundledYtDlp = path.resolve(__dirname, "../.venv/Scripts/yt-dlp.exe");
 const ytDlpPath = process.env.YT_DLP_PATH || (existsSync(bundledYtDlp) ? bundledYtDlp : "yt-dlp");
 const siteName = "FetchVids";
+const ownerName = "Xyphora AI";
+const ownerUrl = "https://xyphora-ai.vercel.app/";
 const primaryLandingPath = "/instagram-video-downloader/";
 const pageMetadata = {
   "/": {
@@ -260,6 +262,11 @@ function getStructuredData(req, pageUrl, meta) {
       operatingSystem: "Any",
       url: `${getPublicBaseUrl(req)}${primaryLandingPath}`,
       description: "Paste a public Instagram, Facebook, YouTube, or X/Twitter video link and resolve available MP4 download options for content you own or have permission to save.",
+      creator: {
+        "@type": "Organization",
+        name: ownerName,
+        url: ownerUrl
+      },
       offers: {
         "@type": "Offer",
         price: "0",

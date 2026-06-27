@@ -6,6 +6,10 @@ const BRAND = {
   first: "Fetch",
   accent: "Vids"
 };
+const OWNER = {
+  name: "Xyphora AI",
+  url: "https://xyphora-ai.vercel.app/"
+};
 
 const ROUTES = {
   instagram: "/instagram-video-downloader/",
@@ -627,6 +631,9 @@ function Footer() {
         </div>
       </div>
       <p>{BRAND.name} is not affiliated with Instagram, Meta, Facebook, YouTube, Google, X, or Twitter. Download only public content you own or have permission to use.</p>
+      <p>
+        Developed by <a className="owner-link" href={OWNER.url} target="_blank" rel="noopener noreferrer">{OWNER.name}</a>.
+      </p>
       <p>Copyright 2026 {BRAND.name}</p>
     </footer>
   );
