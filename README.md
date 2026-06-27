@@ -48,10 +48,10 @@ See [docs/LAUNCH-CHECKLIST.md](docs/LAUNCH-CHECKLIST.md) for the verified cost b
 
 ## SEO setup
 
-The site is branded as **FetchVids** and includes a descriptive title, meta description, Open Graph/Twitter preview tags, a favicon, a web manifest, structured data, dynamic canonical URL injection, `/robots.txt`, and `/sitemap.xml`.
+The primary landing page is `/instagram-video-downloader/` and is optimized around the search intent "download Instagram video." It includes an Instagram-focused title, meta description, Open Graph/Twitter preview tags, a favicon, a web manifest, WebSite/WebApplication/HowTo/FAQ structured data, dynamic canonical URL injection, `/robots.txt`, and `/sitemap.xml`.
 
-For best SEO after deployment, connect a real domain and optionally set `PUBLIC_SITE_URL=https://your-domain.com` in the hosting environment. If `PUBLIC_SITE_URL` is not set, FetchVids uses the current request host for canonical, robots, and sitemap URLs.
+For best SEO after deployment, connect a real domain and set `PUBLIC_SITE_URL=https://your-domain.com` in the hosting environment. If `PUBLIC_SITE_URL` is not set, FetchVids uses the current request host for canonical, robots, and sitemap URLs.
 
 ## Important
 
-FetchVids only accepts supported public URLs. Do not add login cookies or private-account access. Instagram Stories commonly require authentication, so only Stories exposed publicly without login can resolve. Users should download only content they own or have permission to use. Review each platform’s terms, copyright law, your hosting provider’s policy, and your ad network’s policy before launch.
+FetchVids only accepts supported public URLs. Do not add login cookies or private-account access. Instagram Stories commonly require authentication, so only Stories exposed publicly without login can resolve. Users should download only content they own or have permission to use. Review each platform's terms, copyright law, your hosting provider's policy, and your ad network's policy before launch.

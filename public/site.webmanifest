@@ -1,7 +1,7 @@
 {
   "name": "FetchVids",
   "short_name": "FetchVids",
-  "description": "Free social video downloader for public links.",
+  "description": "Instagram video downloader for public Reels, posts, and Stories.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

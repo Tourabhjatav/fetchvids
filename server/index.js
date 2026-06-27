@@ -20,6 +20,7 @@ const indexHtmlPath = path.join(distPath, "index.html");
 const bundledYtDlp = path.resolve(__dirname, "../.venv/Scripts/yt-dlp.exe");
 const ytDlpPath = process.env.YT_DLP_PATH || (existsSync(bundledYtDlp) ? bundledYtDlp : "yt-dlp");
 const siteName = "FetchVids";
+const primaryLandingPath = "/instagram-video-downloader/";
 
 app.disable("x-powered-by");
 app.set("trust proxy", isProduction ? 1 : false);
@@ -140,8 +141,12 @@ function getPublicBaseUrl(req) {
   return `${protocol}://${host}`.replace(/\/+$/, "");
 }
 
+function getPrimaryLandingUrl(req) {
+  return `${getPublicBaseUrl(req)}${primaryLandingPath}`;
+}
+
 function sendAppShell(req, res) {
-  const siteUrl = `${getPublicBaseUrl(req)}/`;
+  const siteUrl = getPrimaryLandingUrl(req);
   const html = readFileSync(indexHtmlPath, "utf8")
     .replaceAll("%FETCHVIDS_SITE_URL%", siteUrl)
     .replaceAll("%CSP_NONCE%", res.locals.cspNonce);
@@ -229,14 +234,14 @@ app.get("/robots.txt", (req, res) => {
 });
 
 app.get("/sitemap.xml", (req, res) => {
-  const baseUrl = getPublicBaseUrl(req);
+  const landingUrl = getPrimaryLandingUrl(req);
   const today = new Date().toISOString().slice(0, 10);
   res.type("application/xml");
   res.setHeader("Cache-Control", "public, max-age=3600");
   res.send(`<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>${baseUrl}/</loc>
+    <loc>${landingUrl}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>

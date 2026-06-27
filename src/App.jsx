@@ -54,24 +54,51 @@ function getPlatform(value) {
 
 const FAQS = [
   {
-    question: `Is ${BRAND.name} free to use?`,
-    answer: `${BRAND.name} is free during its public testing phase. Free-host limits and fair-use rate limits may apply.`
+    question: "How do I download an Instagram video?",
+    answer: `Copy the Instagram video, Reel, post, or public Story link, paste it into ${BRAND.name}, and choose Download. If a safe MP4 is available, the result appears on the page.`
   },
   {
-    question: "What links are supported?",
-    answer: `${BRAND.name} supports public Instagram Reels, posts and accessible Stories, YouTube videos and Shorts, X/Twitter video posts, and Facebook videos and Reels.`
+    question: "Can I download Instagram Reels?",
+    answer: `${BRAND.name} supports public Instagram Reel links when the media is available without login and the source can be resolved by the downloader engine.`
   },
   {
-    question: "Where are downloaded videos saved?",
-    answer: "Your browser normally saves the MP4 file in your device’s Downloads folder."
+    question: "What Instagram links are supported?",
+    answer: "Public Instagram Reels, video posts, TV-style links, and publicly accessible Story links are accepted. Private, login-only, friends-only, or expired content is not supported."
   },
   {
-    question: "Can I download private or login-only media?",
-    answer: `No. ${BRAND.name} does not use account cookies or bypass privacy controls. Private, friends-only, and login-only media are not supported.`
+    question: "Where are downloaded Instagram videos saved?",
+    answer: "Your browser normally saves the MP4 file in your device's Downloads folder, unless you choose a different location."
   },
   {
-    question: `Is ${BRAND.name} affiliated with these platforms?`,
-    answer: `No. ${BRAND.name} is independent and is not affiliated with Instagram, YouTube, X, Facebook, Meta, or Google.`
+    question: "Why is an Instagram video not downloading?",
+    answer: "The video may be private, removed, region-limited, login-only, temporarily blocked, or unavailable as a direct MP4. Try a public Instagram link that opens in a browser without signing in."
+  },
+  {
+    question: "Is it legal to download Instagram videos?",
+    answer: "Only download public content you own, content in the public domain, or content you have permission to save. Do not use the service to infringe copyright or bypass platform access controls."
+  },
+  {
+    question: `Is ${BRAND.name} affiliated with Instagram?`,
+    answer: `No. ${BRAND.name} is independent and is not affiliated with Instagram, Meta, YouTube, X, Facebook, or Google.`
+  }
+];
+
+const INSTAGRAM_FORMATS = [
+  {
+    title: "Instagram video downloader",
+    text: "Paste a public Instagram video URL and resolve the available MP4 download option in your browser."
+  },
+  {
+    title: "Instagram Reels downloader",
+    text: "Save public Reels from shared links when the source is available without a private account or login wall."
+  },
+  {
+    title: "Instagram post video saver",
+    text: "Use links from video posts and carousel posts that include public video media."
+  },
+  {
+    title: "Public Story support",
+    text: "Accessible Story URLs can work while the Story is still live and publicly reachable."
   }
 ];
 
@@ -147,6 +174,7 @@ function Header() {
         <BrandLogo />
       </a>
       <nav aria-label="Main navigation">
+        <a href="#instagram">Instagram downloader</a>
         <a href="#how">How it works</a>
         <a href="#faq">FAQ</a>
       </nav>
@@ -166,12 +194,12 @@ function Downloader({ onResult, result, onReset }) {
     event.preventDefault();
     if (!platform) {
       setStatus("error");
-      setMessage("Paste a supported public Instagram, YouTube, X/Twitter, or Facebook link.");
+      setMessage("Paste a supported public Instagram, YouTube, X/Twitter, or Facebook video link.");
       return;
     }
 
     setStatus("loading");
-    setMessage(`Finding the best available ${platform.name} video…`);
+    setMessage(`Finding the best available ${platform.name} video...`);
 
     try {
       const response = await fetch("/api/resolve", {
@@ -202,13 +230,13 @@ function Downloader({ onResult, result, onReset }) {
   return (
     <>
       <form className="download-form" onSubmit={submit} noValidate>
-        <label className="sr-only" htmlFor="media-url">Social media video URL</label>
+        <label className="sr-only" htmlFor="media-url">Instagram video URL</label>
         <input
           id="media-url"
           type="url"
           inputMode="url"
           autoComplete="url"
-          placeholder="Paste a public video link…"
+          placeholder="Paste an Instagram video or Reel link..."
           value={url}
           onChange={(event) => {
             setUrl(event.target.value);
@@ -221,11 +249,11 @@ function Downloader({ onResult, result, onReset }) {
         />
         <button type="submit" disabled={status === "loading"}>
           {status === "loading" ? <span className="spinner" /> : null}
-          {status === "loading" ? "Working…" : "Download"}
+          {status === "loading" ? "Working..." : "Download"}
         </button>
       </form>
       <div className="form-meta">
-        <p id="url-help"><span className="shield">◇</span> Only download content you own or have permission to use.</p>
+        <p id="url-help"><span className="shield">OK</span> Only download content you own or have permission to use.</p>
         <p id="form-message" className={`form-message form-message--${status}`} aria-live="polite">
           {message}
         </p>
@@ -242,10 +270,13 @@ function Hero({ onResult, result, onReset }) {
     <main id="top">
       <section className="hero">
         <div className="hero-copy">
-          <h1 aria-label={`Download social videos with ${BRAND.name}`}>
-            <span>Download</span><em>social videos</em><span>with {BRAND.name}</span>
+          <h1 aria-label={`Download Instagram videos online with ${BRAND.name}`}>
+            <span>Download</span><em>Instagram videos</em><span>online</span>
           </h1>
-          <p>Instagram, YouTube, X/Twitter and Facebook public links.<br /> Paste a shared URL—no account required.</p>
+          <p>
+            Paste an Instagram Reel, video post, or public Story link and save the available MP4.
+            Also supports public YouTube, X/Twitter, and Facebook video links.
+          </p>
         </div>
         <div className="hero-art" aria-hidden="true">
           <span className="ribbon ribbon--back" />
@@ -258,22 +289,53 @@ function Hero({ onResult, result, onReset }) {
   );
 }
 
+function InstagramGuide() {
+  return (
+    <section className="instagram-section" id="instagram">
+      <div className="section-shell instagram-shell">
+        <div className="instagram-copy">
+          <p className="eyebrow">Download Instagram video</p>
+          <h2>Instagram video downloader for Reels, posts, and public Stories</h2>
+          <p>
+            {BRAND.name} is built for one simple task: paste a public Instagram URL and get a clean
+            download option when the media can be resolved. It works in the browser, does not need
+            an Instagram account, and keeps the downloader focused on public links.
+          </p>
+          <p>
+            For the best result, use the share link from Instagram itself. If the video is private,
+            expired, login-only, or blocked by the source platform, the downloader will not bypass
+            those restrictions.
+          </p>
+        </div>
+        <div className="format-grid" aria-label="Supported Instagram download types">
+          {INSTAGRAM_FORMATS.map((item) => (
+            <article className="format-card" key={item.title}>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function HowItWorks() {
   const steps = [
-    ["Copy the link", "Open a supported platform, choose a public video, and copy its share link."],
+    ["Copy the Instagram link", "Open Instagram, choose a public Reel, video post, or Story, and copy its share link."],
     ["Paste it here", `Drop the link into ${BRAND.name} and tap Download.`],
-    ["Save your video", "Choose the available quality and save the file to your device."]
+    ["Save your video", "Choose the available quality and save the MP4 file to your device."]
   ];
   return (
     <section className="how-section" id="how">
       <div className="section-shell">
-        <h2>How it works</h2>
+        <h2>How to download an Instagram video</h2>
         <div className="steps">
           {steps.map(([title, text], index) => (
             <article className="step" key={title}>
               <span className="step-number">{index + 1}</span>
               <div><h3>{title}</h3><p>{text}</p></div>
-              {index < steps.length - 1 ? <span className="step-arrow" aria-hidden="true">→</span> : null}
+              {index < steps.length - 1 ? <span className="step-arrow" aria-hidden="true">-&gt;</span> : null}
             </article>
           ))}
         </div>
@@ -291,14 +353,14 @@ function Result({ result, onReset }) {
           <div className={`result-card ${result ? "result-card--active" : ""}`}>
             <div className="video-preview">
               {result?.thumbnail ? <img src={result.thumbnail} alt="" /> : null}
-              <span className="play-button" aria-hidden="true">▶</span>
+              <span className="play-button" aria-hidden="true">Play</span>
               <div className="video-controls" aria-hidden="true">
-                <span>▶</span><span>00:00 / {result?.duration || "00:30"}</span><i /><span>◖</span><span>⛶</span>
+                <span>Play</span><span>00:00 / {result?.duration || "00:30"}</span><i /><span>HD</span><span>Full</span>
               </div>
             </div>
             <div className="result-info">
               <h3>{result ? (result.title || "Your video is ready") : "Your video will appear here"}</h3>
-              <p>{result ? `${result.platform || "Video"}  •  MP4  •  ${result.quality || "Best available"}` : "Paste a supported link above to begin."}</p>
+              <p>{result ? `${result.platform || "Video"}  |  MP4  |  ${result.quality || "Best available"}` : "Paste a supported link above to begin."}</p>
               {result ? (
                 <>
                   <a className="download-button" href={result.downloadUrl} download rel="nofollow">
@@ -324,7 +386,7 @@ function FAQ() {
     <section className="faq-section" id="faq">
       <div className="section-shell">
         <div className="clip-rule"><BrandMark small /></div>
-        <h2>Frequently asked questions</h2>
+        <h2>Instagram video downloader FAQ</h2>
         <div className="faq-list">
           {FAQS.map((item, index) => {
             const expanded = open === index;
@@ -372,6 +434,7 @@ function Footer() {
       <div className="footer-main">
         <a className="brand" href="#top" aria-label={`${BRAND.name} home`}><BrandLogo /></a>
         <div className="footer-links">
+          <a href="#instagram">Instagram downloader</a>
           <a href="#how">How it works</a>
           <a href="#faq">FAQ</a>
           <a href="#privacy">Privacy</a>
@@ -379,8 +442,8 @@ function Footer() {
           <a href="#copyright">Copyright</a>
         </div>
       </div>
-      <p>{BRAND.name} is not affiliated with Instagram, YouTube, X, Facebook, Meta, or Google. Download only public content you own or have permission to use.</p>
-      <p>© 2026 {BRAND.name}</p>
+      <p>{BRAND.name} is not affiliated with Instagram, Meta, YouTube, X, Facebook, or Google. Download only public content you own or have permission to use.</p>
+      <p>Copyright 2026 {BRAND.name}</p>
     </footer>
   );
 }
@@ -392,6 +455,7 @@ export default function App() {
     <>
       <Header />
       <Hero onResult={setResult} result={result} onReset={reset} />
+      <InstagramGuide />
       <HowItWorks />
       <Result result={result} onReset={reset} />
       <FAQ />

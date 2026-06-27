@@ -3,27 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta
       name="description"
-      content="FetchVids helps you save public Instagram Reels, YouTube videos and Shorts, X/Twitter videos, and Facebook videos from a shared link when you have permission."
+      content="Download Instagram videos, Reels, posts, and public Stories online with FetchVids. Paste an Instagram link and save the available MP4 when you have permission."
     />
     <meta name="application-name" content="FetchVids" />
     <meta name="theme-color" content="#075bea" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="FetchVids" />
     <meta property="og:url" content="%FETCHVIDS_SITE_URL%" />
-    <meta property="og:title" content="FetchVids — Free Social Video Downloader for Public Links" />
+    <meta property="og:title" content="Instagram Video Downloader - Download Reels, Posts & Stories | FetchVids" />
     <meta
       property="og:description"
-      content="Paste a public social video URL and resolve an MP4 download link for content you own or have permission to save."
+      content="Paste a public Instagram video URL and resolve an MP4 download link for content you own or have permission to save."
     />
     <meta property="og:image" content="/social-preview.svg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="FetchVids — Free Social Video Downloader" />
+    <meta name="twitter:title" content="Instagram Video Downloader | FetchVids" />
     <meta
       name="twitter:description"
-      content="Save public videos from Instagram, YouTube, X/Twitter, and Facebook using a shared link."
+      content="Download Instagram videos, Reels, posts, and public Stories from a shared link."
     />
     <meta name="twitter:image" content="/social-preview.svg" />
     <link rel="canonical" href="%FETCHVIDS_SITE_URL%" />
@@ -32,27 +32,100 @@
     <script type="application/ld+json" nonce="%CSP_NONCE%">
       {
         "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "FetchVids",
-        "applicationCategory": "MultimediaApplication",
-        "operatingSystem": "Any",
-        "url": "%FETCHVIDS_SITE_URL%",
-        "description": "FetchVids resolves public social video links into downloadable MP4 options for content users own or have permission to save.",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        }
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "%FETCHVIDS_SITE_URL%#website",
+            "name": "FetchVids",
+            "url": "%FETCHVIDS_SITE_URL%",
+            "description": "FetchVids helps users download Instagram videos, Reels, posts, and public Stories from shared links when they have permission."
+          },
+          {
+            "@type": "WebApplication",
+            "@id": "%FETCHVIDS_SITE_URL%#app",
+            "name": "FetchVids Instagram Video Downloader",
+            "applicationCategory": "MultimediaApplication",
+            "operatingSystem": "Any",
+            "url": "%FETCHVIDS_SITE_URL%",
+            "description": "Paste a public Instagram video link and resolve available MP4 download options for content you own or have permission to save.",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            }
+          },
+          {
+            "@type": "HowTo",
+            "@id": "%FETCHVIDS_SITE_URL%#howto",
+            "name": "How to download an Instagram video",
+            "description": "Copy a public Instagram link, paste it into FetchVids, and save the available MP4 file.",
+            "step": [
+              {
+                "@type": "HowToStep",
+                "name": "Copy the Instagram link",
+                "text": "Open Instagram, choose a public Reel, post, or Story, and copy its share link."
+              },
+              {
+                "@type": "HowToStep",
+                "name": "Paste the link",
+                "text": "Paste the Instagram URL into FetchVids and choose Download."
+              },
+              {
+                "@type": "HowToStep",
+                "name": "Save the video",
+                "text": "Open the resolved MP4 option and save the file to your device."
+              }
+            ]
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "%FETCHVIDS_SITE_URL%#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How do I download an Instagram video?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Copy the Instagram video, Reel, post, or public Story link, paste it into FetchVids, and choose Download. If a safe MP4 is available, the result appears on the page."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I download Instagram Reels?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "FetchVids supports public Instagram Reel links when the media is available without login and the source can be resolved by the downloader engine."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What Instagram links are supported?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Public Instagram Reels, video posts, TV-style links, and publicly accessible Story links are accepted. Private, login-only, friends-only, or expired content is not supported."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is it legal to download Instagram videos?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Only download public content you own, content in the public domain, or content you have permission to save. Do not use the service to infringe copyright or bypass platform access controls."
+                }
+              }
+            ]
+          }
+        ]
       }
     </script>
-    <title>FetchVids — Free Social Video Downloader for Public Links</title>
+    <title>Instagram Video Downloader - Download Reels, Posts & Stories | FetchVids</title>
   </head>
   <body>
     <div id="root">
       <main>
-        <h1>FetchVids free social video downloader</h1>
+        <h1>Instagram video downloader</h1>
         <p>
-          Download public videos from Instagram, YouTube, X/Twitter, and Facebook by pasting a shared link.
+          Download Instagram videos, Reels, posts, and public Stories by pasting a shared link.
           Only save content you own or have permission to use.
         </p>
       </main>
@@ -60,7 +133,7 @@
     <noscript>
       <main>
         <h1>FetchVids requires JavaScript</h1>
-        <p>Enable JavaScript to resolve public social video links.</p>
+        <p>Enable JavaScript to resolve public Instagram video links.</p>
       </main>
     </noscript>
     <script type="module" src="/src/main.jsx"></script>
